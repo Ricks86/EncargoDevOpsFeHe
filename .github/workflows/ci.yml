@@ -24,6 +24,10 @@ jobs:
         distribution: 'temurin'
         cache: maven
 
+    # da permisos de ejecucion al wrapper de maven para que pueda ser ejecutado en la VM
+    - name: Grant execute permission to mvnw
+      run: chmod +x ./mvnw
+
     # aqui se valida que el codigo efectivamente compile antes de subirse al repositorio
     - name: Build with Maven
       run: ./mvnw clean compile
