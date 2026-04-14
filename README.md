@@ -46,9 +46,10 @@ Para garantizar la calidad del código, no se permiten "pushes" directos a `main
 2.  **Revisión por Pares:** Al menos un miembro del equipo debe revisar el código, comentar posibles mejoras y dar su aprobación (**Approve**).
 3.  **Merge:** Una vez aprobado y pasadas las pruebas automáticas, se procede al merge.
 
+- Agregar que se han realizado 4 Merge con su respectivo pull request, con las 2 features al develop, el hotfix al main y un merge final al main
 
 ---
-## Integración Continua (GitHub Actions)
+## 5 Integración Continua (GitHub Actions)
 
 Hemos configurado un workflows automatizado ubicado en `.github/workflows/ci.yml`.
 
