@@ -53,6 +53,6 @@ Para garantizar la calidad del código, no se permiten "pushes" directos a `main
 
 ---
 
-## 👤 Integrantes
+##  Integrantes
 * **Juan Fernández**
 * **Richard Hernández**
