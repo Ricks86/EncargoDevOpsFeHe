@@ -17,16 +17,16 @@ Se seleccionó GitFlow frente a *Trunk-based development* debido a que:
 ### Se ha usado una estructura CSR (Controller-Service-Repository)
 
 src/main/java/com/tuproyecto/microservice/
-├── controller/       # Capa de entrada (API REST)
-│   ├── UsuarioController.java
-│   └── TareaController.java
-├── service/          # Lógica de negocio
-│   └── TareaService.java
-├── repository/       # Acceso a datos. Implementa repositorio para operaciones CRUD.
-│   └── TareaRepository.java
-└── model/            # Entidades de datos
-    ├── Usuario.java
-    └── Tarea.java
+- controller/       # Capa de entrada (API REST)
+    UsuarioController.java
+    TareaController.java
+- service/          # Lógica de negocio
+    TareaService.java
+- repository/       # Acceso a datos. Implementa repositorio para operaciones CRUD.
+    TareaRepository.java
+- model/            # Entidades de datos
+    Usuario.java
+    Tarea.java
 ---
 
 ## 3. Convenciones de Naming 
