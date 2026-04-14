@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class TareaService {
@@ -32,4 +33,21 @@ public class TareaService {
         tareaRepository.updateTarea(tarea);
     }
 
+    public List<Tarea> filtrarTareasMensuales(int mes) {
+
+        return tareaRepository.buscarPorMes(mes);
+    }
+
+    public boolean marcarComoTerminada(String titulo) {
+        Optional<Tarea> tareaOpt = tareaRepository.buscarPorTitulo(titulo);
+
+        if (tareaOpt.isPresent()) {
+            Tarea tarea = tareaOpt.get();
+            tarea.setCompletada(true);
+            return true;
+        }
+        return false;
+    }
 }
+
+
