@@ -5,6 +5,8 @@ import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Repository
 public class TareaRepository {
@@ -34,17 +36,24 @@ public class TareaRepository {
     }
 
     public void updateTarea(Tarea tareaActualizada){
-        int idTarea =0;
-        int idPosicion=0;
-        for(int i=0;i<tareas.size();i++){
+        for(int i = 0; i < tareas.size(); i++){
             if(tareas.get(i).getId() == tareaActualizada.getId()){
-                idTarea = tareas.get(i).getId();
-                idPosicion = i;
-                break;
+                tareas.set(i, tareaActualizada);
+                return; 
             }
         }
-        tareas.set(idPosicion, tareaActualizada);
+        System.out.println("Error: No se encontró la tarea con ID " + tareaActualizada.getId());
+    }
+    public List<Tarea> buscarPorMes(int mes) {
+        return tareas.stream()
+                .filter(t -> t.getFechaCreacion().getMonthValue() == mes)
+                .collect(Collectors.toList());
+    }
 
+    public Optional<Tarea> buscarPorTitulo(String titulo) {
+        return tareas.stream()
+                .filter(t -> t.getTitulo().equalsIgnoreCase(titulo))
+                .findFirst();
     }
 
 
