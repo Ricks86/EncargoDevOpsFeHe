@@ -1,0 +1,29 @@
+name: Java CI con Maven
+
+# Este codigo se ejecuta al hacer un push o pull request a la ramas main y develop
+on:
+  push:
+    branches: [ "main", "develop" ]
+  pull_request:
+    branches: [ "main", "develop" ]
+# usa ubunto como sistema operativo para ejecutar el workflow
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    # clona el codigo que permite ejecutar los siguientes pasos
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    # instala Java en la VM, clonando el repositorio de Temurin y configurando el cache para Maven
+    - name: Set up JDK 25
+      uses: actions/setup-java@v4
+      with:
+        java-version: '25'
+        distribution: 'temurin'
+        cache: maven
+
+    # aqui se valida que el codigo efectivamente compile antes de subirse al repositorio
+    - name: Build with Maven
+      run: ./mvnw clean compile
