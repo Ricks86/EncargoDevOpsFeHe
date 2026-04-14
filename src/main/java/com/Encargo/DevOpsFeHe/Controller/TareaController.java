@@ -35,4 +35,22 @@ public class TareaController {
     public void modificarTarea(@RequestBody Tarea tarea){
         tareaService.actualizarTarea(tarea);
     }
+
+    @GetMapping("/filtrar/{mes}")
+    public void listarPorMes(@PathVariable int mes) {
+        List<Tarea> filtradas = tareaService.filtrarTareasMensuales(mes);
+        if (filtradas.isEmpty()) {
+            System.out.println("No hay tareas en el mes " + mes);
+        } else {
+            filtradas.forEach(t -> System.out.println(t.getTitulo() + " - " + t.getFechaCreacion()));
+        }
+    }
+    @PutMapping("/completar/{titulo}")
+    public void completarTarea(@PathVariable String titulo) {
+        if (tareaService.marcarComoTerminada(titulo)) {
+            System.out.println("¡Tarea '" + titulo + "' finalizada con éxito!");
+        } else {
+            System.out.println("Error: No se encontró la tarea.");
+        }
+    }
 }
