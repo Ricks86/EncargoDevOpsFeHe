@@ -36,17 +36,13 @@ public class TareaRepository {
     }
 
     public void updateTarea(Tarea tareaActualizada){
-        int idTarea =0;
-        int idPosicion=0;
-        for(int i=0;i<tareas.size();i++){
+        for(int i = 0; i < tareas.size(); i++){
             if(tareas.get(i).getId() == tareaActualizada.getId()){
-                idTarea = tareas.get(i).getId();
-                idPosicion = i;
-                break;
+                tareas.set(i, tareaActualizada);
+                return; 
             }
         }
-        tareas.set(idPosicion, tareaActualizada);
-
+        System.out.println("Error: No se encontró la tarea con ID " + tareaActualizada.getId());
     }
     public List<Tarea> buscarPorMes(int mes) {
         return tareas.stream()
