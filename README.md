@@ -12,8 +12,24 @@ Se seleccionó GitFlow frente a *Trunk-based development* debido a que:
 * **Rigidez** siempre se trabajo siguiendo instrucciones claras y concretas, no da paso a que un desarrollor toque codigo que funciona y pueda afectar al producto negativamente
 
 ---
+## 2 Arquitectura del proyecto
 
-## 2. Convenciones de Naming 
+### Se ha usado una estructura CSR (Controller-Service-Repository)
+
+src/main/java/com/tuproyecto/microservice/
+├── controller/       # Capa de entrada (API REST)
+│   ├── UsuarioController.java
+│   └── TareaController.java
+├── service/          # Lógica de negocio
+│   └── TareaService.java
+├── repository/       # Acceso a datos. Implementa repositorio para operaciones CRUD.
+│   └── TareaRepository.java
+└── model/            # Entidades de datos
+    ├── Usuario.java
+    └── Tarea.java
+---
+
+## 3. Convenciones de Naming 
 
 Para mantener el repositorio organizado, las ramas deben seguir este formato:
 
@@ -26,7 +42,7 @@ Para mantener el repositorio organizado, las ramas deben seguir este formato:
 
 ---
 
-## 3. Estándar de Commits 
+## 4. Estándar de Commits 
 
 Utilizamos mensajes semánticos para que el historial sea legible y fácil de auditar. Cada commit debe empezar con un prefijo seguido de dos puntos:
 
@@ -38,7 +54,7 @@ Utilizamos mensajes semánticos para que el historial sea legible y fácil de au
 
 ---
 
-## 4. Flujo de Revisión y Merge
+## 5. Flujo de Revisión y Merge
 
 Para garantizar la calidad del código, no se permiten "pushes" directos a `main` ni a `develop`. El flujo obligatorio es:
 
@@ -49,7 +65,7 @@ Para garantizar la calidad del código, no se permiten "pushes" directos a `main
 - Agregar que se han realizado 4 Merge con su respectivo pull request, con las 2 features al develop, el hotfix al main y un merge final al main
 
 ---
-## 5 Integración Continua (GitHub Actions)
+## 6 Integración Continua (GitHub Actions)
 
 Hemos configurado un workflows automatizado ubicado en `.github/workflows/ci.yml`.
 
