@@ -1,4 +1,4 @@
-# Encargo DevOps
+# Encargo DevOps Seccion 002D OLS
 
 Este repositorio documenta y aplica las convenciones de desarrollo colaborativo para el microservicio creado con **Java con Spring Boot**, siguiendo los requisitos del encargo
 
@@ -48,8 +48,19 @@ Para garantizar la calidad del código, no se permiten "pushes" directos a `main
 
 
 ---
+## Integración Continua (GitHub Actions)
 
+Hemos configurado un workflows automatizado ubicado en `.github/workflows/ci.yml`.
 
+**¿Qué hace este Action?**
+- Se acciona cada que se ejecuta un `push` y `pull_request` hacia las ramas `main` y `develop`.
+- Configura un entorno con **Java 25**.
+- Ejecuta `./mvnw clean compile` para verificar que el código compile correctamente antes de permitir el merge.
+
+**¿Por qué?**
+
+Porque no es raro que los codigos puedan compilar dependiendo del computador
+por ende esta validación asegura que en un entorno aislado compile con seguridad los cambios realizaados 
 
 ---
 
