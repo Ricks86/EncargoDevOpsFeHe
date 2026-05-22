@@ -49,7 +49,7 @@ jobs:
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         with:
-          args: --severity-threshold=high --org=ricks86 -d
+          args: --severity-threshold=high --org=ricks86
 
   docker-build:
     needs: security-scan
