@@ -1,23 +1,19 @@
 name: Java CI con Maven
 
-# Este codigo se ejecuta al hacer un push o pull request a la ramas main y develop
 on:
   push:
     branches: [ "main", "develop" ]
   pull_request:
     branches: [ "main", "develop" ]
 
-# usa ubunto como sistema operativo para ejecutar el workflow
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
 
     steps:
-      # clona el codigo que permite ejecutar los siguientes pasos
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # instala Java en la VM, clonando el repositorio de Temurin y configurando el cache para Maven
       - name: Set up JDK 25
         uses: actions/setup-java@v4
         with:
@@ -25,11 +21,9 @@ jobs:
           distribution: 'temurin'
           cache: maven
 
-      # da permisos de ejecucion al wrapper de maven para que pueda ser ejecutado en la VM
       - name: Grant execute permission to mvnw
         run: chmod +x ./mvnw
 
-      # aqui se valida que el codigo efectivamente compile antes de subirse al repositorio
       - name: Build and run Unit Tests
         run: ./mvnw clean test
 
@@ -56,15 +50,26 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # clona el codigo que permite ejecutar los siguientes pasos
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # prepara el entorno para construir la imagen
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
-      # construye la imagen docker con el microservicio para el despliegue
       - name: Build Docker Image
         run: |
           docker build -t devops-fehe-app:latest .
+  deploy:
+    name: Despliegue Continuo en Entorno Simulado
+    needs: docker-build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Descargar el código fuente
+        uses: actions/checkout@v4
+
+      - name: Levantar el microservicio con Docker Compose
+        run: docker compose up -d
+
+      - name: Verificar el estado de los contenedores
+        run: docker ps

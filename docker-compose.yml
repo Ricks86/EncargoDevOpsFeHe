@@ -1,0 +1,21 @@
+version: '3.8'
+
+services:
+  microservicio-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: devops-fehe-app:latest
+    container_name: springboot-microservicio
+    ports:
+      - "8080:8080"
+    restart: unless-stopped
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+    networks:
+      - devops-network
+
+networks:
+  devops-network:
+    driver: bridge
+
