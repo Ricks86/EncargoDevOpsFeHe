@@ -36,20 +36,21 @@ jobs:
   security-scan:
     needs: build-and-test
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # Corregir permisos de los archivos antes de ejecutar Snyk
-      - name: Fix permissions
-        run: sudo chown -R $USER:$USER .
+      # AGREGA ESTE PASO PARA SOLUCIONAR EL ERROR DE PERMISOS (CODE 13)
+      - name: Grant full permissions
+        run: sudo chmod -R 777 .
 
       - name: Run Snyk to check for vulnerabilities
         uses: snyk/actions/maven@master
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         with:
-          args: --severity-threshold=high --org=ricks86
+          args: --severity-threshold=high
 
   docker-build:
     needs: security-scan
