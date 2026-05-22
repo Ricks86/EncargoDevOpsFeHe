@@ -41,7 +41,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # AGREGA ESTE PASO PARA SOLUCIONAR EL ERROR DE PERMISOS (CODE 13)
       - name: Grant full permissions
         run: sudo chmod -R 777 .
 
