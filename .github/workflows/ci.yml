@@ -68,3 +68,17 @@ jobs:
       - name: Build Docker Image
         run: |
           docker build -t devops-fehe-app:latest .
+  deploy:
+    name: Despliegue Continuo en Entorno Simulado
+    needs: docker-build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Descargar el código fuente
+        uses: actions/checkout@v4
+
+      - name: Levantar el microservicio con Docker Compose
+        run: docker compose up -d
+
+      - name: Verificar el estado de los contenedores
+        run: docker ps
