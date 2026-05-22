@@ -36,13 +36,14 @@ jobs:
   security-scan:
     needs: build-and-test
     runs-on: ubuntu-latest
-
     steps:
-      # clona el codigo que permite ejecutar los siguientes pasos
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # escanea el codigo en busqueda de vulnerabilidades usando snyk
+      # Corregir permisos de los archivos antes de ejecutar Snyk
+      - name: Fix permissions
+        run: sudo chown -R $USER:$USER .
+
       - name: Run Snyk to check for vulnerabilities
         uses: snyk/actions/maven@master
         env:
