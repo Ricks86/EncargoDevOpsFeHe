@@ -1,4 +1,4 @@
-# Encargo DevOps Seccion 002D OLS
+# Encargo DevOps Seccion 002D (Primera evaluación)
 
 Este repositorio documenta y aplica las convenciones de desarrollo colaborativo para el microservicio creado con **Java con Spring Boot**, siguiendo los requisitos del encargo
 
@@ -78,6 +78,44 @@ Hemos configurado un workflows automatizado ubicado en `.github/workflows/ci.yml
 
 Porque no es raro que los codigos puedan compilar dependiendo del computador
 por ende esta validación asegura que en un entorno aislado compile con seguridad los cambios realizaados 
+
+---
+# Encargo DevOps Seccion 002D (Segunda evaluación)
+
+## 7 Contenerización Docker
+
+Para garantizar un despliegue optimizado, la aplicación ha sido contenerizada implementando un Multi-stage Build
+
+### Justificación 
+* capa Builder: Utilizamos una imagen inicial pesada que incluye Maven y el Java Development Kit (JDK). La necesitamos porque contiene absolutamente todas las herramientas requeridas para descargar sus dependencias, compilar el código fuente en Java 25 y empaquetar el proyecto.
+* capa Runtime: Trasladamos solo el artefacto final (.jar) a una imagen muy ligera que contiene únicamente el entorno de ejecución (JRE). Al basarse en Alpine Linux, dejamos atrás todo el peso del código fuente y las herramientas de desarrollo. Esto reduce drásticamente el tamaño del contenedor, mejora la seguridad al reducir la superficie de ataque y agiliza el despliegue automático en su entorno simulado.
+
+
+
+## 9 Despliegue en entorno simulado (docker-compose)
+
+Para asegurar el correcto funcionamiento de la aplicación, el despliegue automático y se realiza en un entorno cloud simulado utilizando **Docker Compose**.
+
+### Justificación
+
+* **Mantenibilidad (`build` e `image`):** Centralizamos la construcción. Docker Compose sabe dónde buscar el Dockerfile y qué nombre asignarle a la imagen sin tener que escribir comandos largos
+* **Estabilidad (`restart: unless-stopped`):** Le estamos diciendo al orquestador que si por algún motivo la aplicación sufre un error interno y se cae, debe levantarla automáticamente de nuevo[cite: 391].
+* **Escalabilidad y Seguridad (`networks`):** Al crear una red privada (`devops-network`), estamos dejando la arquitectura lista para que en el futuro puedan agregar un contenedor de base de datos (como MySQL) y que todos se comuniquen de forma segura.
+
+### Instrucciones para levantar el dockercompose
+Tener dockercompose instalado y ejecutar los siguientes comandos en la raíz del repositorio:
+
+**1. Construir la imagen Docker:**
+El siguiente comando le indica al motor de Docker que debe leer las instrucciones de su `Dockerfile` para empaquetar una nueva imagen:
+`docker build -t devops-fehe-app:latest .`
+
+**2. Iniciar los contenedores:**
+Para levantar el  dockercompose la configuración definida en `docker-compose.yml`, ejecuta:
+`docker compose up -d`
+
+**3. Detener y limpiar el entorno:**
+Para apagar los contenedores y liberar los recursos, ejecuta:
+`docker compose down`
 
 ---
 
