@@ -96,6 +96,7 @@ Para automatizar la validación, seguridad y empaquetado del código en cada act
 
 ### Justificación
 * **Pruebas Unitarias (`mvn clean test`):** Ejecutamos las pruebas de forma aislada (incluyendo `TareaRepositoryTest.java`) en cada nueva integración. Esto asegura la calidad del código y garantiza que los nuevos cambios no rompan las funcionalidades existentes.
+* **Cobertura de Código (JaCoCo):** Integrado a través del `pom.xml` para auditar la calidad de las pruebas. Durante la fase de validación, genera automáticamente un reporte que nos permite medir el porcentaje de código que está siendo evaluado, asegurando que las partes críticas de la aplicación estén correctamente cubiertas.
 * **Escaneo de Vulnerabilidades (Snyk):** Integramos un análisis de seguridad automatizado como un paso obligatorio del flujo de trabajo. Esto nos permite detectar de manera temprana y proactiva vulnerabilidades en las dependencias antes de que el código sea empaquetado.
 * **Corrección de Vulnerabilidades:** Gracias a la implementación del análisis con Snyk, se identificaron y corrigieron exitosamente las vulnerabilidades y brechas de seguridad detectadas en el proyecto, garantizando un artefacto final seguro.
 * **Construcción Automatizada (Docker Buildx):** Tras pasar las pruebas y la validación de seguridad, el pipeline construye automáticamente la imagen Docker de la aplicación. Esto estandariza la creación del artefacto y lo deja listo para el despliegue en el entorno simulado.
