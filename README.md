@@ -90,7 +90,20 @@ Para garantizar un despliegue optimizado, la aplicación ha sido contenerizada i
 * capa Builder: Utilizamos una imagen inicial pesada que incluye Maven y el Java Development Kit (JDK). La necesitamos porque contiene absolutamente todas las herramientas requeridas para descargar sus dependencias, compilar el código fuente en Java 25 y empaquetar el proyecto.
 * capa Runtime: Trasladamos solo el artefacto final (.jar) a una imagen muy ligera que contiene únicamente el entorno de ejecución (JRE). Al basarse en Alpine Linux, dejamos atrás todo el peso del código fuente y las herramientas de desarrollo. Esto reduce drásticamente el tamaño del contenedor, mejora la seguridad al reducir la superficie de ataque y agiliza el despliegue automático en su entorno simulado.
 
+## 8 Pipeline de Integración Continua y Seguridad (CI/CD)
 
+Para automatizar la validación, seguridad y empaquetado del código en cada actualización, se implementó un pipeline de CI/CD utilizando GitHub Actions.
+
+### Justificación
+* **Pruebas Unitarias (`mvn clean test`):** Ejecutamos las pruebas de forma aislada (incluyendo `TareaRepositoryTest.java`) en cada nueva integración. Esto asegura la calidad del código y garantiza que los nuevos cambios no rompan las funcionalidades existentes.
+* **Escaneo de Vulnerabilidades (Snyk):** Integramos un análisis de seguridad automatizado como un paso obligatorio del flujo de trabajo. Esto nos permite detectar de manera temprana y proactiva vulnerabilidades en las dependencias antes de que el código sea empaquetado.
+* **Corrección de Vulnerabilidades:** Gracias a la implementación del análisis con Snyk, se identificaron y corrigieron exitosamente las vulnerabilidades y brechas de seguridad detectadas en el proyecto, garantizando un artefacto final seguro.
+* **Construcción Automatizada (Docker Buildx):** Tras pasar las pruebas y la validación de seguridad, el pipeline construye automáticamente la imagen Docker de la aplicación. Esto estandariza la creación del artefacto y lo deja listo para el despliegue en el entorno simulado.
+
+### Requisitos del Pipeline
+Para que el workflow de GitHub Actions se ejecute correctamente y apruebe el análisis de seguridad, es indispensable cumplir con lo siguiente en el repositorio remoto:
+
+* **Configuración de Snyk:** El administrador del repositorio debe agregar el token de autenticación creando un secreto llamado `SNYK_TOKEN` en la ruta **Settings > Secrets and variables > Actions** de GitHub.
 
 ## 9 Despliegue en entorno simulado (docker-compose)
 
