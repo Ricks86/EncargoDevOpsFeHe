@@ -112,7 +112,7 @@ Para asegurar el correcto funcionamiento de la aplicación, el despliegue autom�
 ### Justificación
 
 * **Mantenibilidad (`build` e `image`):** Centralizamos la construcción. Docker Compose sabe dónde buscar el Dockerfile y qué nombre asignarle a la imagen sin tener que escribir comandos largos
-* **Estabilidad (`restart: unless-stopped`):** Le estamos diciendo al orquestador que si por algún motivo la aplicación sufre un error interno y se cae, debe levantarla automáticamente de nuevo[cite: 391].
+* **Estabilidad (`restart: unless-stopped`):** Le estamos diciendo al orquestador que si por algún motivo la aplicación sufre un error interno y se cae, debe levantarla automáticamente de nuevo.
 * **Escalabilidad y Seguridad (`networks`):** Al crear una red privada (`devops-network`), estamos dejando la arquitectura lista para que en el futuro puedan agregar un contenedor de base de datos (como MySQL) y que todos se comuniquen de forma segura.
 
 ### Instrucciones para levantar el dockercompose
