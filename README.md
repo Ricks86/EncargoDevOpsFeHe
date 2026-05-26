@@ -124,11 +124,11 @@ El siguiente comando le indica al motor de Docker que debe leer las instruccione
 `docker build -t devops-fehe-app:latest .`
 
 **2. Iniciar los contenedores:**
-Para levantar el  dockercompose la configuración definida en `docker-compose.yml`, ejecuta:
+Para levantar el  dockercompose la configuración definida en `docker-compose.yml`, se debe ejecutar el siguiente comando::
 `docker compose up -d`
 
 **3. Detener y limpiar el entorno:**
-Para apagar los contenedores y liberar los recursos, ejecuta:
+Para apagar los contenedores y liberar los recursos, se debe ejecutar el siguiente comando:
 `docker compose down`
 
 ---
