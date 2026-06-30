@@ -5,7 +5,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    image: devops-fehe-app:latest
+    image: richiiii/devops-fehe-app:latest
     container_name: springboot-microservicio
     ports:
       - "8080:8080"
