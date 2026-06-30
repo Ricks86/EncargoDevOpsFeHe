@@ -87,9 +87,19 @@ jobs:
             FILE_BASE64=$(base64 -w 0 docker-compose.yml)
             REMOTE_PATH="/home/ec2-user/docker-compose.yml"
             aws ssm send-command \
+            --instance-ids "${{ vars.INSTANCE_ID }}" \
+            --document-name "AWS-RunShellScript" \
+            --comment "Copiando docker-compose al servidor" \
+            --parameters "{\"commands\":[\"echo '$FILE_BASE64' | base64 -d > $REMOTE_PATH\"]}"
+
+        - name: Enviar configuracion CloudWatch a instancia
+          run: |
+            FILE_BASE64=$(base64 -w 0 cwagent-config.json)
+            REMOTE_PATH="/home/ec2-user/cwagent-config.json"
+            aws ssm send-command \
               --instance-ids "${{ vars.INSTANCE_ID }}" \
               --document-name "AWS-RunShellScript" \
-              --comment "Copiando docker-compose al servidor" \
+              --comment "Copiando json de CloudWatch al servidor" \
               --parameters "{\"commands\":[\"echo '$FILE_BASE64' | base64 -d > $REMOTE_PATH\"]}"
 
         - name: Run SSH Command
@@ -105,4 +115,11 @@ jobs:
               sudo mkdir -p /usr/libexec/docker/cli-plugins
               sudo curl -SL https://github.com/docker/compose/releases/latest/download/docker-compose-linux-$(uname -m) -o /usr/libexec/docker/cli-plugins/docker-compose
               sudo chmod +x /usr/libexec/docker/cli-plugins/docker-compose
-              sudo docker compose -f /home/ec2-user/docker-compose.yml up -d
+              
+              sleep 15
+              
+              export AWS_ACCESS_KEY_ID="${{ secrets.AWS_ACCESS_KEY_ID }}"
+              export AWS_SECRET_ACCESS_KEY="${{ secrets.AWS_SECRET_ACCESS_KEY }}"
+              export AWS_SESSION_TOKEN="${{ secrets.AWS_SESSION_TOKEN }}"
+              
+              sudo -E docker compose -f /home/ec2-user/docker-compose.yml up -d --force-recreate

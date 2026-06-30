@@ -1,0 +1,31 @@
+{
+  "agent": {
+    "metrics_collection_interval": 60,
+    "run_as_user": "root"
+  },
+  "logs": {
+    "logs_collected": {
+      "files": {
+        "collect_list": [
+          {
+            "file_path": "/var/lib/docker/containers/*/*.log",
+            "log_group_name": "devops-fehe-log-group",
+            "log_stream_name": "docker-containers",
+            "timestamp_format": "%Y-%m-%dT%H:%M:%S.%fZ"
+          }
+        ]
+      }
+    }
+  },
+  "metrics": {
+    "metrics_collected": {
+      "docker": {
+        "measurement": [
+          "container_cpu",
+          "container_memory"
+        ],
+        "metrics_collection_interval": 60
+      }
+    }
+  }
+}
