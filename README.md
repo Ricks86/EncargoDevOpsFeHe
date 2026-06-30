@@ -145,6 +145,29 @@ En lugar de compilar el código fuente directamente en el servidor de producció
 2. *Despliegue Seguro (AWS SSM):* Utilizamos AWS Systems Manager para conectarnos a la instancia EC2 de AWS Academy sin necesidad de abrir el puerto SSH (22) al público general. 
 3. *Orquestación (Docker Compose):* El pipeline envía el archivo docker-compose.yml al servidor. La instancia EC2 actúa únicamente como entorno de ejecución (Runtime), descargando la imagen finalizada desde Docker Hub y levantándola de forma eficiente y escalable.
 
+## 11 AWS CloudWatch
+
+Para cumplir con el requerimiento de monitoreo en el entorno de producción, se implementó un flujo de observabilidad centralizada utilizando el agente oficial de AWS CloudWatch a través de Docker Compose.
+
+### Justificación Técnica de la Arquitectura
+En lugar de acoplar librerías de monitoreo directamente dentro del código fuente de Spring Boot (lo cual genera deuda técnica, dificulta el mantenimiento y consume recursos de la aplicación), implementamos un estándar de la industria basado en el patrón arquitectónico *Sidecar*:
+
+1. *Monitoreo Desacoplado (Patrón Sidecar):* Desplegamos el agente de CloudWatch (`amazon/cloudwatch-agent`) como un contenedor independiente. Este servicio lee directamente el *socket* de Docker y los archivos de registro locales, extrayendo la telemetría desde el exterior sin interferir con la lógica de negocio.
+2. *Recolección Automatizada y Segura:* Mediante el archivo `cwagent-config.json`, instruimos al agente para capturar métricas clave del sistema (`cpu_usage_active` y `mem_used_percent`) y los logs internos de Docker. Las credenciales de AWS se inyectan dinámicamente en tiempo de ejecución a través del pipeline, manteniendo el repositorio seguro y libre de llaves estáticas.
+3. *Sincronización de Infraestructura:* Se adaptó el pipeline (`ci.yml`) con tiempos de espera programados y comandos de recreación forzada (`--force-recreate`). Esto previene condiciones de carrera (*Race Conditions*) al asegurar que AWS SSM termine de escribir las configuraciones en el disco de la EC2 antes de que el motor de Docker intente leerlas.
+
+## 12 Creación de Dashboards y Métricas de Calidad
+
+Para facilitar la toma de decisiones informadas y el análisis continuo del sistema, se construyó un centro de mando visual híbrido, integrando los paneles nativos de AWS CloudWatch y las herramientas de integración de GitHub.
+
+### Justificación Técnica de la Arquitectura
+Para una mejor visualización de los usos de hardware en la nube, se implementarón dashboards usando la herramienta de Cloudwatch con metricas claras y concisas
+
+1. *Toma de Decisiones sobre Hardware (CPU/Memoria):* En AWS CloudWatch, se configuró un Dashboard que grafica en tiempo real los recursos de la instancia EC2.
+2. *Detección Proactiva de Errores (Metric Filters):* Puesto que CloudWatch no grafica texto nativamente, creamos un filtro que escanea los registros de los contenedores en tiempo real buscando el patrón de texto `"ERROR"`. Esto se traduce en una gráfica de incidencias que alerta inmediatamente si el código recién desplegado está fallando.
+
+---
+
 ##  Integrantes
 * **Juan Fernández**
 * **Richard Hernández**
