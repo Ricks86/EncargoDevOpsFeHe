@@ -132,6 +132,18 @@ Para apagar los contenedores y liberar los recursos, se debe ejecutar el siguien
 `docker compose down`
 
 ---
+# Encargo DevOps Seccion 002D (Tercera evaluación)
+
+## 10 Despliegue Continuo en AWS EC2
+
+Para cumplir con el despliegue en un entorno orquestado en la nube, se implementó un flujo de Despliegue Continuo utilizando GitHub Actions, Docker Hub y AWS Systems Manager (SSM).
+
+### Justificación 
+En lugar de compilar el código fuente directamente en el servidor de producción, implementamos el estándar de la industria mediante un *Container Registry*:
+
+1. *Construcción Aislada:* GitHub Actions asume el rol de integración, construyendo la imagen optimizada  y empujándola hacia Docker Hub.
+2. *Despliegue Seguro (AWS SSM):* Utilizamos AWS Systems Manager para conectarnos a la instancia EC2 de AWS Academy sin necesidad de abrir el puerto SSH (22) al público general. 
+3. *Orquestación (Docker Compose):* El pipeline envía el archivo docker-compose.yml al servidor. La instancia EC2 actúa únicamente como entorno de ejecución (Runtime), descargando la imagen finalizada desde Docker Hub y levantándola de forma eficiente y escalable.
 
 ##  Integrantes
 * **Juan Fernández**
