@@ -19,10 +19,21 @@
   },
   "metrics": {
     "metrics_collected": {
-      "docker": {
+      "cpu": {
         "measurement": [
-          "container_cpu",
-          "container_memory"
+          "usage_active",
+          "usage_user",
+          "usage_system"
+        ],
+        "metrics_collection_interval": 60,
+        "resources": [
+          "*"
+        ]
+      },
+      "mem": {
+        "measurement": [
+          "used_percent",
+          "active"
         ],
         "metrics_collection_interval": 60
       }
