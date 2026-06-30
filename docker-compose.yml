@@ -1,10 +1,5 @@
-version: '3.8'
-
 services:
   microservicio-app:
-    build:
-      context: .
-      dockerfile: Dockerfile
     image: richiiii/devops-fehe-app:latest
     container_name: springboot-microservicio
     ports:
@@ -15,7 +10,22 @@ services:
     networks:
       - devops-network
 
+  amazon-cloudwatch-agent:
+    image: amazon/amazon-cloudwatch-agent:latest
+    container_name: amazon-cloudwatch-agent
+    environment:
+      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+      - AWS_SESSION_TOKEN=${AWS_SESSION_TOKEN}
+      - AWS_REGION=us-east-1
+    volumes:
+      - ./cwagent-config.json:/etc/cwagentconfig/cwagentconfig.json
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /var/lib/docker/containers:/var/lib/docker/containers:ro
+    restart: always
+    networks:
+      - devops-network
+
 networks:
   devops-network:
     driver: bridge
-
