@@ -11,7 +11,7 @@ services:
       - devops-network
 
   amazon-cloudwatch-agent:
-    image: amazon/amazon-cloudwatch-agent:latest
+    image: amazon/cloudwatch-agent:latest
     container_name: amazon-cloudwatch-agent
     environment:
       - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
@@ -29,3 +29,4 @@ services:
 networks:
   devops-network:
     driver: bridge
+
