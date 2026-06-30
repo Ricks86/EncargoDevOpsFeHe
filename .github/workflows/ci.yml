@@ -87,9 +87,19 @@ jobs:
             FILE_BASE64=$(base64 -w 0 docker-compose.yml)
             REMOTE_PATH="/home/ec2-user/docker-compose.yml"
             aws ssm send-command \
+            --instance-ids "${{ vars.INSTANCE_ID }}" \
+            --document-name "AWS-RunShellScript" \
+            --comment "Copiando docker-compose al servidor" \
+            --parameters "{\"commands\":[\"echo '$FILE_BASE64' | base64 -d > $REMOTE_PATH\"]}"
+
+        - name: Enviar configuracion CloudWatch a instancia
+          run: |
+            FILE_BASE64=$(base64 -w 0 cwagent-config.json)
+            REMOTE_PATH="/home/ec2-user/cwagent-config.json"
+            aws ssm send-command \
               --instance-ids "${{ vars.INSTANCE_ID }}" \
               --document-name "AWS-RunShellScript" \
-              --comment "Copiando docker-compose al servidor" \
+              --comment "Copiando json de CloudWatch al servidor" \
               --parameters "{\"commands\":[\"echo '$FILE_BASE64' | base64 -d > $REMOTE_PATH\"]}"
 
         - name: Run SSH Command
