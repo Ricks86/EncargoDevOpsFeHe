@@ -58,42 +58,42 @@ jobs:
           docker build -t devops-fehe-app:latest .
 
   deploy-aws:
-    name: Despliegue Continuo en AWS EC2
-    needs: docker-build
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      name: Despliegue Continuo en AWS EC2
+      needs: docker-build
+      runs-on: ubuntu-latest
+      steps:
+        - name: Checkout
+          uses: actions/checkout@v4
 
-      - name: configure aws credentials
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
-          aws-region: ${{ vars.AWS_REGION }}
+        - name: configure aws credentials
+          uses: aws-actions/configure-aws-credentials@v4
+          with:
+            aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+            aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+            aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
+            aws-region: ${{ vars.AWS_REGION }}
 
-      - name: Enviar compose a instancia
-        run: |
-          FILE_BASE64=$(base64 -w 0 docker-compose.yml)
-          REMOTE_PATH="/home/ssm-user/docker-compose.yml"
-          aws ssm send-command \
-            --instance-ids "${{ vars.INSTANCE_ID }}" \
-            --document-name "AWS-RunShellScript" \
-            --comment "Copiando docker-compose al servidor" \
-            --parameters "{\"commands\":[\"echo '$FILE_BASE64' | base64 -d > $REMOTE_PATH\"]}"
+        - name: Enviar compose a instancia
+          run: |
+            FILE_BASE64=$(base64 -w 0 docker-compose.yml)
+            REMOTE_PATH="/home/ec2-user/docker-compose.yml"
+            aws ssm send-command \
+              --instance-ids "${{ vars.INSTANCE_ID }}" \
+              --document-name "AWS-RunShellScript" \
+              --comment "Copiando docker-compose al servidor" \
+              --parameters "{\"commands\":[\"echo '$FILE_BASE64' | base64 -d > $REMOTE_PATH\"]}"
 
-      - name: Run SSH Command
-        id: ssh-command
-        uses: leonowski/ec2-ssh-ghactions@v1
-        with:
-          username: ssm-user
-          ec2_instance_id: ${{ vars.INSTANCE_ID }}
-          region: ${{ vars.AWS_REGION }}
-          command: |
-            sudo dnf install -y docker
-            sudo systemctl enable --now docker
-            sudo mkdir -p /usr/libexec/docker/cli-plugins
-            sudo curl -SL https://github.com/docker/compose/releases/latest/download/docker-compose-linux-$(uname -m) -o /usr/libexec/docker/cli-plugins/docker-compose
-            sudo chmod +x /usr/libexec/docker/cli-plugins/docker-compose
-            sudo docker compose -f /home/ssm-user/docker-compose.yml up -d
+        - name: Run SSH Command
+          id: ssh-command
+          uses: leonowski/ec2-ssh-ghactions@v1
+          with:
+            username: ec2-user
+            ec2_instance_id: ${{ vars.INSTANCE_ID }}
+            region: ${{ vars.AWS_REGION }}
+            command: |
+              sudo dnf install -y docker
+              sudo systemctl enable --now docker
+              sudo mkdir -p /usr/libexec/docker/cli-plugins
+              sudo curl -SL https://github.com/docker/compose/releases/latest/download/docker-compose-linux-$(uname -m) -o /usr/libexec/docker/cli-plugins/docker-compose
+              sudo chmod +x /usr/libexec/docker/cli-plugins/docker-compose
+              sudo docker compose -f /home/ec2-user/docker-compose.yml up -d
