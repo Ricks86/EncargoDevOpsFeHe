@@ -166,7 +166,25 @@ Para una mejor visualización de los usos de hardware en la nube, se implementar
 1. *Toma de Decisiones sobre Hardware (CPU/Memoria):* En AWS CloudWatch, se configuró un Dashboard que grafica en tiempo real los recursos de la instancia EC2.
 2. *Detección Proactiva de Errores (Metric Filters):* Puesto que CloudWatch no grafica texto nativamente, creamos un filtro que escanea los registros de los contenedores en tiempo real buscando el patrón de texto `"ERROR"`. Esto se traduce en una gráfica de incidencias que alerta inmediatamente si el código recién desplegado está fallando.
 
+## 13 Implementación de Políticas de Seguridad (Hard Block)
+
+Para garantizar la integridad y seguridad del código en producción, hemos implementado una política de **Hard Block** en las ramas críticas (`main` y `develop`).
+
+### Justificación Técnica
+La automatización de pruebas y seguridad es efectiva solo si se garantiza que nadie pueda omitirlas. Al implementar reglas de protección de ramas, el repositorio actúa como un "portero" que impide cualquier cambio que no cumpla con los estándares definidos:
+
+* **Validación Obligatoria:** El botón de "Merge" en los Pull Requests permanece bloqueado hasta que el pipeline de GitHub Actions (`security-scan` y `build-and-test`) finaliza exitosamente.
+* **Protección ante vulnerabilidades:** Gracias a la integración con Snyk, el *Hard Block* impide la fusión de código si se detectan vulnerabilidades de nivel crítico o alto.
+* **Revisión por Pares:** Se configuró el repositorio para requerir al menos una aprobación manual de un revisor con permisos de escritura, asegurando una doble validación (humana + automatizada).
+
+### Evidencia del Bloqueo
+En la siguiente imagen se observa cómo la interfaz de GitHub impide la integración del código hasta que todos los *status checks* son satisfactorios y se cuenta con la revisión requerida:
+
+<img width="926" height="563" alt="bloqueo_snyk" src="https://github.com/user-attachments/assets/97f83038-ce1b-4875-886f-add6361e52b8" />
+
 ---
+
+
 
 ##  Integrantes
 * **Juan Fernández**
