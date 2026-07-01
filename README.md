@@ -155,6 +155,9 @@ En lugar de acoplar librerías de monitoreo directamente dentro del código fuen
 1. *Monitoreo Desacoplado (Patrón Sidecar):* Desplegamos el agente de CloudWatch (`amazon/cloudwatch-agent`) como un contenedor independiente. Este servicio lee directamente el *socket* de Docker y los archivos de registro locales, extrayendo la telemetría desde el exterior sin interferir con la lógica de negocio.
 2. *Recolección Automatizada y Segura:* Mediante el archivo `cwagent-config.json`, instruimos al agente para capturar métricas clave del sistema (`cpu_usage_active` y `mem_used_percent`) y los logs internos de Docker. Las credenciales de AWS se inyectan dinámicamente en tiempo de ejecución a través del pipeline, manteniendo el repositorio seguro y libre de llaves estáticas.
 3. *Sincronización de Infraestructura:* Se adaptó el pipeline (`ci.yml`) con tiempos de espera programados y comandos de recreación forzada (`--force-recreate`). Esto previene condiciones de carrera (*Race Conditions*) al asegurar que AWS SSM termine de escribir las configuraciones en el disco de la EC2 antes de que el motor de Docker intente leerlas.
+   
+
+
 
 ## 12 Creación de Dashboards y Métricas de Calidad
 
@@ -165,6 +168,11 @@ Para una mejor visualización de los usos de hardware en la nube, se implementar
 
 1. *Toma de Decisiones sobre Hardware (CPU/Memoria):* En AWS CloudWatch, se configuró un Dashboard que grafica en tiempo real los recursos de la instancia EC2.
 2. *Detección Proactiva de Errores (Metric Filters):* Puesto que CloudWatch no grafica texto nativamente, creamos un filtro que escanea los registros de los contenedores en tiempo real buscando el patrón de texto `"ERROR"`. Esto se traduce en una gráfica de incidencias que alerta inmediatamente si el código recién desplegado está fallando.
+
+##Evidencia Dashboards CloudWatch y metricas
+
+<img width="1682" height="667" alt="image" src="https://github.com/user-attachments/assets/c19cf3d4-8403-4ec0-83f1-99eb30471fb2" />
+   
 
 ## 13 Implementación de Políticas de Seguridad (Hard Block)
 
